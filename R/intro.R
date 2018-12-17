@@ -27,6 +27,8 @@
 #' ctrl + shift + arrows moves the cursor by a word while selecting, 
 #' -> use to select part of a line for evaluation (with ctrl+enter)
 
+# ctrl + alt + arrow moves a line up and down
+
 #' ctrl+i re-indents the file (or the selected text if any) 
 #' -> I find myself doing ctrl+a ctrl+i ctrl+s all the time
 
