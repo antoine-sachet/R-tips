@@ -35,10 +35,10 @@ y <- x + rnorm(N, mean=0, sd=20)
 plot(x, y)
 
 # RMSE without piping
-sqrt(sum((x+y)^2))
+sqrt(sum((x-y)^2))
 
 # RMSE with piping (%>%)
-(x+y)^2 %>%
+(x-y)^2 %>%
   sum %>%
   sqrt
 
@@ -61,10 +61,10 @@ perc %>%
 # Dplyr introduces functions (in the form of verbs) to manipulate data frames
 # All dplyr functions work nicely with piping
 
-# Transaction dataset from a big european online retailer
-# RDS is a compressed binary format useful to save R data for later use
-# Saves the R data structure so no parsing is required: 
-# the object is loaded back into the session exactly as it was
+# Transaction dataset from a big european online retailer RDS is a compressed
+# binary format useful to save R data for later use Saves the R data structure
+# so no parsing is required: the object is loaded back into the session exactly
+# as it was
 transactions <- readr::read_rds("data/transactions_full.rds")
 
 glimpse(transactions)
@@ -93,7 +93,7 @@ transactions %>%
   glimpse()
 
 transactions %>%
-  select(sku, brand, matches("^cg[1-3]"), matches("SALES")) %>%
+  select(sku, BRAND = brand, matches("^cg[1-3]$"), contains("SALES")) %>%
   glimpse()
 
 
@@ -110,27 +110,31 @@ transactions_damen %>%
 
 # Can count more than one variables
 transactions %>%
-  count(cg1, cg2, cg3)
+  count(cg1, cg2, cg3) %>%
+  View()
 
 # How many subcategories in shoes and textile?
 unique(transactions$cg3) # ?
+
 transactions %>%
   count(cg1, cg2, cg3) %>%
   count(cg1, cg2)
 
-
 # Create new derived variables --------------------------------------------
 
-transactions_damen %>%
+transactions_damen <- transactions_damen %>% 
   mutate(only1 = 1) %>%
   mutate(NET_ITEMS = SOLD_ITEMS_BEF_RETURN - RETURNED_ITEMS,
-         return_rate = RETURNED_ITEMS / SOLD_ITEMS_BEF_RETURN) %>%
-  mutate(return_rate_pretty = paste0(round(100 * return_rate), "%")) %>%
+         return_rate = RETURNED_ITEMS / SOLD_ITEMS_BEF_RETURN) %>% 
   glimpse()
+
 
 # magrittr advanced piping
 
-
+transactions_damen %<>% 
+  mutate(only1 = 1) %>%
+  mutate(NET_ITEMS = SOLD_ITEMS_BEF_RETURN - RETURNED_ITEMS,
+         return_rate = RETURNED_ITEMS / SOLD_ITEMS_BEF_RETURN)
 
 # Advanced aggregations ---------------------------------------------------
 # Two verbs:
@@ -141,13 +145,12 @@ transactions_damen %>%
 # Mutation function must returned one value per row!
 
 transactions_damen %>%
-  ungroup %>%
   summarise(average_weekly_return_rate = mean(return_rate, na.rm=T),
             overall_return_rate = sum(RETURNED_ITEMS) / sum(SOLD_ITEMS_BEF_RETURN))
 
 
 transactions_damen %>%
-  group_by(cg3) %>%
+  group_by(cg1, cg2, cg3) %>%
   summarise(average_weekly_return_rate = mean(return_rate, na.rm=T),
             overall_return_rate = sum(RETURNED_ITEMS) / sum(SOLD_ITEMS_BEF_RETURN)) %>%
   arrange(desc(overall_return_rate))
@@ -156,7 +159,7 @@ transactions_damen %>%
   group_by(brand) %>%
   summarise(average_weekly_return_rate = mean(return_rate, na.rm=T),
             overall_return_rate = sum(RETURNED_ITEMS) / sum(SOLD_ITEMS_BEF_RETURN)) %>%
-  arrange(overall_return_rate)
+  arrange(desc(overall_return_rate))
 
 # Manual count (can be combined with other aggregations)
 transactions_damen %>%
@@ -168,7 +171,7 @@ transactions_damen %>%
 
 # Renaming
 transactions_damen %>%
-  mutate(always_one = only1) %>%
+  mutate(always_one = only1) %>% 
   rename(only_one = only1) %>%
   glimpse()
 
@@ -187,4 +190,27 @@ transactions %>%
 #' How important are discounts? 
 #' Do items sell more when discounted?
 
+transactions %>%
+  select(-discount_rate, -is_black_price) %>%
+  sample_frac(0.01) %>%
+  mutate(discount_rate = NET_DISCOUNT / NET_SALES_BEF_DISCOUNT) %>%
+  mutate(is_black_price = discount_rate < 0.02) %>%
+  group_by(cg1, is_black_price) %>%
+  summarise(total_sold = sum(SOLD_ITEMS_BEF_RETURN - RETURNED_ITEMS),
+            n_weeks = n()) %>%
+  mutate(prop_sold = total_sold / sum(total_sold))
 
+transactions %>%
+  select(-discount_rate, -is_black_price) %>%
+  # sample_frac is useful to try out the pipeline on a smaller subset of data
+  # another option is sample_n to sample exactly N rows at random
+  # This can be combined with group_by to take a random sample in each group
+  # sample_frac(0.01) %>%
+  mutate(discount_rate = NET_DISCOUNT / NET_SALES_BEF_DISCOUNT) %>%
+  mutate(is_black_price = ifelse(discount_rate < 0.02, "black-price", "discounted")) %>%
+  group_by(cg1, sku, is_black_price) %>%
+  summarise(total_sold = sum(SOLD_ITEMS_BEF_RETURN - RETURNED_ITEMS),
+            n_weeks = n()) %>%
+  mutate(prop_sold = total_sold / sum(total_sold)) %>%
+  group_by(cg1, is_black_price) %>%
+  summarise(mean(prop_sold, na.rm=T))

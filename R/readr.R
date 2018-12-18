@@ -28,14 +28,34 @@ readr_example()
 filepath <- readr_example("mtcars.csv")
 readLines(filepath, n = 3)
 read_csv(filepath)
-read_delim(filepath, delim=",", col_names = T)
+mt <- read_delim(filepath, delim=",", col_names = T)
+
+specs <- list()
+
+specs$mtcars <- cols(
+  mpg = col_double(),
+  cyl = col_double(),
+  disp = col_double(),
+  hp = col_double(),
+  drat = col_double(),
+  wt = col_double(),
+  qsec = col_double(),
+  vs = col_integer(),
+  am = col_integer(),
+  gear = col_integer(),
+  carb = col_double()
+)
+
+mt <- read_delim(filepath, delim=",", col_names = T, col_types = specs$mtcars)
+mt
+
+problems(mt)
 
 # A generic delimited file ------------------------------------------------
 
 filepath <- readr_example("massey-rating.txt")
 readLines(filepath, n = 3)
-read_table(filepath)
-
+massey_rating <- read_table(filepath)
 
 # A challenging file ------------------------------------------------------
 
@@ -46,12 +66,18 @@ df <- read_csv(filepath)
 
 View(problems(df))
 
-spec <- cols(
+specs$challenge <- cols(
   x = col_double(),
   y = col_date(format="%Y-%m-%d")
 )
+
+# specs$challenge_guess <- cols(
+#   x = col_double(),
+#   y = col_guess()
+# )
+
 # Date formats described in details at ?strptime
 
-df <- read_csv(filepath, col_types = spec)
+df <- read_csv(filepath, col_types = specs$challenge)
 hist(df$y, breaks = "months")
 
