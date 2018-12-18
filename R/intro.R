@@ -20,15 +20,14 @@
 #' ctrl+1 jumps (back) to the main editor
 #' ctrl+tab moves editor tab, ctrl+shift+tab goes back
 
-#' Use `home` and `end` to quickly move in a line
-#' Of course you know that arrows move the cursor, but did you know:
-#' ctrl + left/right arrow moves the cursor by a word instead of a character
-#' shift + arrows moves the cursor *while selecting*
-#' ctrl + shift + arrows moves the cursor by a word while selecting, 
+#' Use `home` and `end` to quickly move in a line Of course you know that arrows
+#' move the cursor, but did you know: ctrl + left/right arrow moves the cursor
+#' by a word instead of a character shift + arrows moves the cursor *while
+#' selecting* ctrl + shift + arrows moves the cursor by a word while selecting,
 #' -> use to select part of a line for evaluation (with ctrl+enter)
 
 # ctrl + alt + arrow moves a line up and down
-
+# ctrl + shift + C comments/uncomment a line
 #' ctrl+i re-indents the file (or the selected text if any) 
 #' -> I find myself doing ctrl+a ctrl+i ctrl+s all the time
 
