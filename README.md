@@ -1,4 +1,6 @@
-# R training for SoundOut
+# R training
+
+An evolving collection of R tips and tricks. For a comprehensive introduction to R, I recommend https://r4ds.had.co.nz/.
 
 ## Recommended order:
 
@@ -40,11 +42,15 @@
 - Taking it to the next level with `caret`
 
 ## Plotting with ggplot2
+- Basic plots, labelling, facetting
+- Customising scales (x/y, color/fill)
+- Advanced geoms
 
 # Packages needed
 
 Installing all of them will take a long time.
 
+```
 install.packages("tidyverse")
 install.packages("caret", dependencies = T)
 install.packages("fitdistrplus")
@@ -54,6 +60,7 @@ install.packages("Hmisc")
 install.packages("foreach")
 install.packages("doParallel")
 install.packages("e1071")
+```
 
 # References
 
