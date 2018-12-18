@@ -10,23 +10,26 @@ An evolving collection of R tips and tricks. For a comprehensive introduction to
 * readr.R
 * dplyr.R
 
-## Intro to R
+## Introduction 
 
-- Data types and structures
-- Rstudio useful shortcuts and  functions
-- (classes and function dispatch)
-- Using git
+- R Data types and structures
+- Rstudio useful shortcuts and functions
+- Using git (see https://guides.github.com/introduction/git-handbook/)
+- Using git from Rstudio (see http://r-pkgs.had.co.nz/git.html or video https://resources.rstudio.com/wistia-rstudio-essentials-2/rstudioessentialsmanagingpart2-2)
+
+For an in-depth introduction to Rstudio see https://resources.rstudio.com/
+
 
 ## Data manipulation
 
-- `dplyr`
+- `dplyr` (see https://r4ds.had.co.nz/transform.html)
 - Joining datasets
-- `readr`
+- `readr` (see https://r4ds.had.co.nz/data-import.html)
 - `magrittr`
 - overview of other useful packages:
     * lubridate
-    * tidyr
-    * forcats
+    * tidyr (see https://r4ds.had.co.nz/tidy-data.html)
+    * forcats (see https://r4ds.had.co.nz/factors.html or http://stat545.com/block029_factors.html)
 
 ## Tips and tricks
 
@@ -34,6 +37,7 @@ An evolving collection of R tips and tricks. For a comprehensive introduction to
 - Reshaping data with `tidyr`
 - Better for loops with `foreach`
 - Debugging code
+- classes and function dispatch
 
 ## Machine learning with R
 
@@ -45,6 +49,12 @@ An evolving collection of R tips and tricks. For a comprehensive introduction to
 - Basic plots, labelling, facetting
 - Customising scales (x/y, color/fill)
 - Advanced geoms
+- Comprehensive introduction: https://r4ds.had.co.nz/data-visualisation.html
+
+## Web-apps with Shiny
+
+- https://shiny.rstudio.com/tutorial/
+- A collection of advanced shiny articles https://shiny.rstudio.com/articles/
 
 # Packages needed
 
@@ -61,9 +71,3 @@ install.packages("foreach")
 install.packages("doParallel")
 install.packages("e1071")
 ```
-
-# References
-
-The very best introduction to R and the tidyverse: https://r4ds.had.co.nz/
-
-
